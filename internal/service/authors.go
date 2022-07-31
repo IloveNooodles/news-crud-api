@@ -7,7 +7,7 @@ import (
 
 type IAuthorService interface {
 	GetAuthors() ([]schema.Author, error)
-	CreateNewAuthor(id string, name string) error
+	CreateNewAuthor(schema schema.Author) error
 }
 
 type authorService struct {
@@ -19,8 +19,8 @@ func (s *authorService) GetAuthors() ([]schema.Author, error) {
 	return authors, err
 }
 
-func (s *authorService) CreateNewAuthor(id string, name string) error {
-	err := s.authorsRepository.CreateNewAuthor(id, name)
+func (s *authorService) CreateNewAuthor(schema schema.Author) error {
+	err := s.authorsRepository.CreateNewAuthor(schema)
 	return err
 }
 

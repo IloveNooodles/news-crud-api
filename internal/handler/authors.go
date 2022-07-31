@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
 	"github.com/gin-gonic/gin"
 )
@@ -34,7 +35,28 @@ func (h *authorHandler) GetAuthors(c *gin.Context) {
 }
 
 func (h *authorHandler) CreateNewAuthor(c *gin.Context) {
+	var json schema.Author
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "error when parsing data, fill the data correctly",
+		})
+		return
+	}
 
+	err := h.authorService.CreateNewAuthor(json)
+	if err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{
+			"success": false,
+			"message": "id is already exists",
+		})
+		return
+	}
+
+  c.JSON(http.StatusCreated, gin.H{
+    "success": true,
+    "message": "successfuly created new user",
+  })
 }
 
 func NewAuthorHandler(authorService service.IAuthorService) IAuthorHandler {

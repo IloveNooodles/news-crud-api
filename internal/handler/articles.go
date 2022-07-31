@@ -38,7 +38,7 @@ func (h *articlesHandler) CreateNewArticle(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"success": true,
-		"message": "successfully created new user",
+		"message": "successfully created new articles",
 	})
 }
 

@@ -9,7 +9,7 @@ import (
 
 type IAuthorsRepository interface {
 	GetAuthors() ([]schema.Author, error)
-	CreateNewAuthor(id string, name string) error
+	CreateNewAuthor(schema schema.Author) error
 }
 
 type authorsRepository struct {
@@ -40,14 +40,14 @@ func (r *authorsRepository) GetAuthors() ([]schema.Author, error) {
 	return listAuthor, nil
 }
 
-func (r *authorsRepository) CreateNewAuthor(id string, name string) error {
+func (r *authorsRepository) CreateNewAuthor(schema schema.Author) error {
 	stmt, err := r.db.Prepare("insert into authors (id, name) values ($1, $2)")
 	if err != nil {
 		log.Error().Msg("Error preparing sql statement")
 		return err
 	}
 
-	_, err = stmt.Exec(id, name)
+	_, err = stmt.Exec(schema.ID, schema.Name)
 	if err != nil {
 		log.Error().Msg("Error when inserting to database")
 		return err
