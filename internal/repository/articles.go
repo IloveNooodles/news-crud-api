@@ -33,13 +33,13 @@ func (r *articlesRepository) GetArticles(query string, author string) ([]schema.
 		statement += ` WHERE lower(name) = $1`
 		rows, err = r.db.Query(statement, lowerAuthor)
 	} else if query != "" {
-		statement += ` WHERE lower(title) like lower(title) like $1 OR lower(body) like $1`
+		statement += ` WHERE lower(title) like $1 OR lower(body) like $1`
 		rows, err = r.db.Query(statement, lowerQuery)
 	} else {
 		rows, err = r.db.Query(statement)
 	}
 
-	// log.Info().Msg(statement)
+	log.Info().Msg(statement)
 
 	if err != nil {
 		log.Error().Msg("Error on querying")
