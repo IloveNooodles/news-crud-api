@@ -7,12 +7,3 @@ type Articles struct {
 	Body       string `json:"text" binding:"required"`
 	Created_at string `json:"created_at" binding:"required"`
 }
-
-type GetArticlesRequest struct {
-	Query  string
-	Author string
-}
-
-type GetArticlesResponse struct {
-	ListArticle []Articles
-}
