@@ -4,7 +4,7 @@ type Articles struct {
 	ID        string `json:"id" binding:"required"`
 	Author_ID string `json:"author_id" binding:"required"`
 	Title     string `json:"title" binding:"required"`
-	Body      string `json:"text" binding:"required"`
+	Body      string `json:"body" binding:"required"`
 }
 
 type articleResponse struct {
