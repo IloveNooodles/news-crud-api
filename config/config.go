@@ -36,7 +36,6 @@ func setupEnv() (string, string, error) {
 		getEnv("POSTGRES_HOST"), getEnv("POSTGRES_PORT"), getEnv("POSTGRES_USER"), getEnv("POSTGRES_PASSWORD"), getEnv("POSTGRES_DB"))
 
 	port := "3001"
-	fmt.Printf("ports=%v, url=%v ", port, url)
 	return url, port, nil
 }
 

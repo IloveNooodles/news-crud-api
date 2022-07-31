@@ -16,14 +16,13 @@ type authorsRepository struct {
 }
 
 func (r *authorsRepository) GetAuthorByID(ID string) (schema.Author, error) {
-	stmt, err := r.db.Prepare("SELECT * FROM authors WHERE id = ?")
+	stmt, err := r.db.Prepare("select * from authors where id = $1")
 	if err != nil {
 		log.Error().Msg("Error preparing sql statement")
 		return schema.Author{}, err
 	}
 	res := schema.Author{}
-
-	err = stmt.QueryRow(ID).Scan(res.ID, res.Name)
+	err = stmt.QueryRow(ID).Scan(&res.ID, &res.Name)
 
 	if err != nil {
 		log.Error().Msg("No users found")
