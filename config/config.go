@@ -33,10 +33,10 @@ func setupEnv() (string, string, error) {
 
 	url := fmt.Sprintf("host=%v port=%v user=%v "+
 		"password=%v dbname=%v sslmode=disable",
-		getEnv("host"), getEnv("port"), getEnv("user"), getEnv("password"), getEnv("dbname"))
+		getEnv("POSTGRES_HOST"), getEnv("POSTGRES_PORT"), getEnv("POSTGRES_USER"), getEnv("POSTGRES_PASSWORD"), getEnv("POSTGRES_DB"))
 
 	port := "3001"
-
+	fmt.Printf("ports=%v, url=%v ", port, url)
 	return url, port, nil
 }
 
