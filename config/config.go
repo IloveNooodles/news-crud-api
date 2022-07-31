@@ -35,7 +35,7 @@ func setupEnv() (string, string, error) {
 		"password=%v dbname=%v sslmode=disable",
 		getEnv("host"), getEnv("port"), getEnv("user"), getEnv("password"), getEnv("dbname"))
 
-	port := "8000"
+	port := "3001"
 
 	return url, port, nil
 }
