@@ -3,12 +3,13 @@ package handler
 import (
 	"net/http"
 
+	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
 	"github.com/gin-gonic/gin"
 )
 
 type IArticlesHandler interface {
-	GetAuthorByID(c *gin.Context)
+	CreateNewArticle(c *gin.Context)
 	GetArticles(c *gin.Context)
 }
 
@@ -16,21 +17,28 @@ type articlesHandler struct {
 	articleService service.IArticleService
 }
 
-func (h *articlesHandler) GetAuthorByID(c *gin.Context) {
-	id := c.Param("id")
-	author, err := h.articleService.GetAuthorByID(id)
-
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+func (h *articlesHandler) CreateNewArticle(c *gin.Context) {
+	var json schema.Articles
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"message": err.Error(),
+			"message": "error when parsing data, make sure to fill the data correctly",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	err := h.articleService.CreateNewArticle(json)
+	if err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{
+			"success": false,
+			"message": "id or author_id is already exists",
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
 		"success": true,
-		"author":  author,
+		"message": "successfully created new user",
 	})
 }
 
@@ -42,14 +50,14 @@ func (h *articlesHandler) GetArticles(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"success": false,
-			"message": err.Error(),
+			"message": "error when fetching data",
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"success":  true,
-		"articles": listOfArticles,
+		"success": true,
+		"data":    listOfArticles,
 	})
 }
 

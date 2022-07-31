@@ -8,28 +8,52 @@ import (
 )
 
 type IAuthorsRepository interface {
-	GetAuthorByID(ID string) (schema.Author, error)
+	GetAuthors() ([]schema.Author, error)
+	CreateNewAuthor(id string, name string) error
 }
 
 type authorsRepository struct {
 	db *sql.DB
 }
 
-func (r *authorsRepository) GetAuthorByID(ID string) (schema.Author, error) {
-	stmt, err := r.db.Prepare("select * from authors where id = $1")
+func (r *authorsRepository) GetAuthors() ([]schema.Author, error) {
+	var listAuthor []schema.Author
+	rows, err := r.db.Query("select * from authors")
 	if err != nil {
 		log.Error().Msg("Error preparing sql statement")
-		return schema.Author{}, err
+		return listAuthor, err
 	}
-	res := schema.Author{}
-	err = stmt.QueryRow(ID).Scan(&res.ID, &res.Name)
 
+	defer rows.Close()
+
+	for rows.Next() {
+		author := schema.Author{}
+		err := rows.Scan(&author.ID, author.Name)
+
+		if err != nil {
+			log.Error().Msg("Error when getting data from sql")
+			return listAuthor, err
+		}
+		listAuthor = append(listAuthor, author)
+	}
+
+	return listAuthor, nil
+}
+
+func (r *authorsRepository) CreateNewAuthor(id string, name string) error {
+	stmt, err := r.db.Prepare("insert into authors (id, name) values ($1, $2)")
 	if err != nil {
-		log.Error().Msg("No users found")
-		return schema.Author{}, err
+		log.Error().Msg("Error preparing sql statement")
+		return err
 	}
 
-	return res, nil
+	_, err = stmt.Exec(id, name)
+	if err != nil {
+		log.Error().Msg("Error when inserting to database")
+		return err
+	}
+
+	return nil
 }
 
 func NewAuthorsRepository(db *sql.DB) IAuthorsRepository {

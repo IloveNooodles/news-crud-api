@@ -24,25 +24,22 @@ func RoutesInit(server *gin.Engine, db *sql.DB) {
 	api := server.Group("/api")
 	v1 := api.Group("/v1")
 
-	authorsRepository := repository.NewAuthorsRepository(db)
 	articlesRepository := repository.NewArticlesRepository(db)
-	articlesService := service.NewArticleService(authorsRepository, articlesRepository)
+	authorsRepository := repository.NewAuthorsRepository(db)
+	articlesService := service.NewArticleService(articlesRepository)
+	authorsService := service.NewAuthorService(authorsRepository)
 	articlesHandler := handler.NewArticlesHandler(articlesService)
-
-	v1.GET("/ping", func(c *gin.Context) {
-		if err := db.Ping(); err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"connection": err.Error(),
-			})
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"connection": "alive",
-		})
-	})
+	authorsHandler := handler.NewAuthorHandler(authorsService)
 
 	articles := v1.Group("/articles")
 	{
-		articles.GET("/:id", articlesHandler.GetAuthorByID)
 		articles.GET("/", articlesHandler.GetArticles)
+		articles.POST("/", articlesHandler.CreateNewArticle)
+	}
+
+	author := v1.Group("/authors")
+	{
+		author.GET("/", authorsHandler.GetAuthors)
+		author.POST("/", authorsHandler.CreateNewAuthor)
 	}
 }

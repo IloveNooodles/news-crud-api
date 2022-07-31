@@ -1,10 +1,13 @@
 package schema
 
 type Articles struct {
-	ID         string `json:"id" binding:"required"`
-	Author_ID  string `json:"author_id" binding:"required"`
-	Title      string `json:"title" binding:"required"`
-	Body       string `json:"text" binding:"required"`
+	ID        string `json:"id" binding:"required"`
+	Author_ID string `json:"author_id" binding:"required"`
+	Title     string `json:"title" binding:"required"`
+	Body      string `json:"text" binding:"required"`
+}
+
+type articleResponse struct {
 	Created_at string `json:"created_at" binding:"required"`
 }
 
@@ -14,5 +17,6 @@ type authorName struct {
 
 type ArticlesAuthor struct {
 	Articles
+	articleResponse
 	authorName
 }

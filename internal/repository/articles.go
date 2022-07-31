@@ -11,6 +11,7 @@ import (
 
 type IArticlesRepository interface {
 	GetArticles(query string, author string) ([]schema.ArticlesAuthor, error)
+	CreateNewArticle(schema schema.Articles) error
 }
 type articlesRepository struct {
 	db *sql.DB
@@ -68,6 +69,22 @@ func (r *articlesRepository) GetArticles(query string, author string) ([]schema.
 	}
 
 	return listArticle, err
+}
+
+func (r *articlesRepository) CreateNewArticle(schema schema.Articles) error {
+	stmt, err := r.db.Prepare("insert into articles (id, author_id, title, body) values ($1, $2, $3, $4)")
+	if err != nil {
+		log.Error().Msg("Error on preparing sql statement")
+		return err
+	}
+
+	_, err = stmt.Exec(schema.ID, schema.Author_ID, schema.Title, schema.Body)
+	if err != nil {
+		log.Error().Msg("Error on inserting data")
+		return err
+	}
+
+	return nil
 }
 
 func NewArticlesRepository(db *sql.DB) IArticlesRepository {
