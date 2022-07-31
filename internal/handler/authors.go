@@ -19,7 +19,7 @@ type authorHandler struct {
 func (h *authorHandler) GetAuthors(c *gin.Context) {
 	authors, err := h.authorService.GetAuthors()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadGateway, gin.H{
 			"success": false,
 			"message": "error when fetching data",
 		})

@@ -28,7 +28,7 @@ func (r *authorsRepository) GetAuthors() ([]schema.Author, error) {
 
 	for rows.Next() {
 		author := schema.Author{}
-		err := rows.Scan(&author.ID, author.Name)
+		err := rows.Scan(&author.ID, &author.Name)
 
 		if err != nil {
 			log.Error().Msg("Error when getting data from sql")
