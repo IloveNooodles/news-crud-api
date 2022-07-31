@@ -1,7 +1,11 @@
 package main
 
-import "github.com/IloveNooodles/kumparan-techincal-test/cmd"
+import (
+	"github.com/IloveNooodles/kumparan-techincal-test/cmd"
+	"github.com/IloveNooodles/kumparan-techincal-test/config"
+)
 
 func main() {
-	cmd.Execute()
+  config.Init()
+  cmd.Init()
 }

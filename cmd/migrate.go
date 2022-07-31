@@ -8,8 +8,8 @@ import (
 
 func migrate() *cobra.Command {
 	migrateCmd := &cobra.Command{
-		Use:   "seeding",
-		Short: "A brief description of your command",
+		Use:   "migrate",
+		Short: "migrate into the sql",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("seeding called")
 		},
