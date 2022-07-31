@@ -7,3 +7,12 @@ type Articles struct {
 	Body       string `json:"text" binding:"required"`
 	Created_at string `json:"created_at" binding:"required"`
 }
+
+type authorName struct {
+	Name string `json:"name" required:"true"`
+}
+
+type ArticlesAuthor struct {
+	Articles
+	authorName
+}

@@ -14,7 +14,7 @@ import (
 func wildcardRouting(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"connection": "alive",
-		"time":       time.Now().Format("RFC1123"),
+		"time":       time.Now().Format(time.RFC1123),
 	})
 }
 
@@ -43,5 +43,6 @@ func RoutesInit(server *gin.Engine, db *sql.DB) {
 	articles := v1.Group("/articles")
 	{
 		articles.GET("/:id", articlesHandler.GetAuthorByID)
+		articles.GET("/", articlesHandler.GetArticles)
 	}
 }

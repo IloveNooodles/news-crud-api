@@ -9,6 +9,7 @@ import (
 
 type IArticlesHandler interface {
 	GetAuthorByID(c *gin.Context)
+	GetArticles(c *gin.Context)
 }
 
 type articlesHandler struct {

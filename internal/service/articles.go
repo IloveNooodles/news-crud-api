@@ -7,7 +7,7 @@ import (
 
 type IArticleService interface {
 	GetAuthorByID(ID string) (schema.Author, error)
-	GetArticles(query string, author string) ([]schema.Articles, error)
+	GetArticles(query string, author string) ([]schema.ArticlesAuthor, error)
 }
 
 type articleService struct {
@@ -20,7 +20,7 @@ func (s *articleService) GetAuthorByID(ID string) (schema.Author, error) {
 	return author, err
 }
 
-func (s *articleService) GetArticles(query string, author string) ([]schema.Articles, error) {
+func (s *articleService) GetArticles(query string, author string) ([]schema.ArticlesAuthor, error) {
 	listOfAuthor, err := s.articlesRepository.GetArticles(query, author)
 	return listOfAuthor, err
 }
