@@ -38,22 +38,22 @@ services:
         "--loglevel warning",
         "--requirepass ${REDIS_PASSWORD}",
       ]
-  api:
-    container_name: article-service-api
-    env_file: .env
-    build: .
-    ports:
-      - "3001:3001"
-    networks:
-      - backend
-    depends_on:
-      - db
-      - cache
-    links:
-      - db
-      - cache
-    volumes:
-      - ./:/app
+  # api:
+  #   container_name: article-service-api
+  #   env_file: .env
+  #   build: .
+  #   ports:
+  #     - "3001:3001"
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - db
+  #     - cache
+  #   links:
+  #     - db
+  #     - cache
+  #   volumes:
+  #     - ./:/app
 
 volumes:
   pgdata:
