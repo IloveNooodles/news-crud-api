@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
@@ -45,8 +46,16 @@ func (h *articlesHandler) CreateNewArticle(c *gin.Context) {
 func (h *articlesHandler) GetArticles(c *gin.Context) {
 	query, _ := c.GetQuery("query")
 	author, _ := c.GetQuery("author")
+	page, _ := c.GetQuery("page")
+	var pageInt int
+  
+	if num, err := strconv.Atoi(page); err != nil {
+		pageInt = 1
+	} else {
+		pageInt = num
+	}
 
-	listOfArticles, err := h.articleService.GetArticles(query, author)
+	listOfArticles, err := h.articleService.GetArticles(query, author, pageInt)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"success": false,

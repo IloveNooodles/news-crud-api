@@ -8,7 +8,7 @@ import (
 )
 
 type IAuthorsRepository interface {
-	GetAuthors() ([]schema.Author, error)
+	GetAuthors(page int) ([]schema.Author, error)
 	CreateNewAuthor(schema schema.Author) error
 }
 
@@ -16,9 +16,11 @@ type authorsRepository struct {
 	db *sql.DB
 }
 
-func (r *authorsRepository) GetAuthors() ([]schema.Author, error) {
+func (r *authorsRepository) GetAuthors(page int) ([]schema.Author, error) {
 	var listAuthor []schema.Author
-	rows, err := r.db.Query("select * from authors")
+	LIMIT := 20
+  offset := (page - 1) * LIMIT
+	rows, err := r.db.Query("select * from authors LIMIT 20 offset $1", offset)
 	if err != nil {
 		log.Error().Msg("Error preparing sql statement")
 		return listAuthor, err

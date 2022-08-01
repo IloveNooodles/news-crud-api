@@ -10,37 +10,36 @@ import (
 )
 
 type IArticlesRepository interface {
-	GetArticles(query string, author string) ([]schema.ArticlesAuthor, error)
+	GetArticles(query string, author string, page int) ([]schema.ArticlesAuthor, error)
 	CreateNewArticle(schema schema.Articles) error
 }
 type articlesRepository struct {
 	db *sql.DB
 }
 
-func (r *articlesRepository) GetArticles(query string, author string) ([]schema.ArticlesAuthor, error) {
+func (r *articlesRepository) GetArticles(query string, author string, page int) ([]schema.ArticlesAuthor, error) {
 	var listArticle []schema.ArticlesAuthor
-	statement := `SELECT * FROM articles NATURAL JOIN authors`
-
 	var rows *sql.Rows
 	var err error
+	statement := `SELECT * FROM articles NATURAL JOIN authors`
 	lowerAuthor := strings.ToLower(author)
 	lowerQuery := fmt.Sprintf(`%%%v%%`, strings.ToLower(query))
-	fmt.Print(lowerQuery)
+	LIMIT := 20
+	offset := (page - 1) * LIMIT
 
 	if author != "" && query != "" {
-		statement += ` WHERE lower(name) = $1 AND (lower(title) like $2 OR lower(body) like $2)`
-		rows, err = r.db.Query(statement, lowerAuthor, lowerQuery)
+		statement += ` WHERE lower(name) = $1 AND (lower(title) like $2 OR lower(body) like $2) LIMIT 20 OFFSET $3`
+		rows, err = r.db.Query(statement, lowerAuthor, lowerQuery, offset)
 	} else if author != "" {
-		statement += ` WHERE lower(name) = $1`
-		rows, err = r.db.Query(statement, lowerAuthor)
+		statement += ` WHERE lower(name) = $1 LIMIT 20 OFFSET $2`
+		rows, err = r.db.Query(statement, lowerAuthor, offset)
 	} else if query != "" {
-		statement += ` WHERE lower(title) like $1 OR lower(body) like $1`
-		rows, err = r.db.Query(statement, lowerQuery)
+		statement += ` WHERE lower(title) like $1 OR lower(body) like $1 LIMIT 20 OFFSET $2`
+		rows, err = r.db.Query(statement, lowerQuery, offset)
 	} else {
-		rows, err = r.db.Query(statement)
+		statement += ` LIMIT 20 OFFSET $1`
+		rows, err = r.db.Query(statement, offset)
 	}
-
-	log.Info().Msg(statement)
 
 	if err != nil {
 		log.Error().Msg("Error on querying")

@@ -7,15 +7,15 @@ import (
 
 type IArticleService interface {
 	CreateNewArticle(schema schema.Articles) error
-	GetArticles(query string, author string) ([]schema.ArticlesAuthor, error)
+	GetArticles(query string, author string, page int) ([]schema.ArticlesAuthor, error)
 }
 
 type articleService struct {
 	articlesRepository repository.IArticlesRepository
 }
 
-func (s *articleService) GetArticles(query string, author string) ([]schema.ArticlesAuthor, error) {
-	listOfAuthor, err := s.articlesRepository.GetArticles(query, author)
+func (s *articleService) GetArticles(query string, author string, page int) ([]schema.ArticlesAuthor, error) {
+	listOfAuthor, err := s.articlesRepository.GetArticles(query, author, page)
 	return listOfAuthor, err
 }
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
@@ -18,7 +19,16 @@ type authorHandler struct {
 }
 
 func (h *authorHandler) GetAuthors(c *gin.Context) {
-	authors, err := h.authorService.GetAuthors()
+	page, _ := c.GetQuery("page")
+	var pageInt int
+
+	if num, err := strconv.Atoi(page); err != nil {
+		pageInt = 1
+	} else {
+		pageInt = num
+	}
+
+	authors, err := h.authorService.GetAuthors(pageInt)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{
 			"success": false,
@@ -53,10 +63,10 @@ func (h *authorHandler) CreateNewAuthor(c *gin.Context) {
 		return
 	}
 
-  c.JSON(http.StatusCreated, gin.H{
-    "success": true,
-    "message": "successfuly created new user",
-  })
+	c.JSON(http.StatusCreated, gin.H{
+		"success": true,
+		"message": "successfuly created new user",
+	})
 }
 
 func NewAuthorHandler(authorService service.IAuthorService) IAuthorHandler {
