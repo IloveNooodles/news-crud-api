@@ -4,9 +4,61 @@ services:
     image: postgres:13-alpine
     restart: always
     env_file: .env
+    networks:
+      - backend
     ports:
       - "5434:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+  migrate:
+    image: migrate/migrate
+    networks:
+      - backend
+    volumes:
+      - .:/migrations
+    links:
+      - db
+    env_file: .env
+    command:
+      ["-path", "./migrations", "-database", "${DATABASE_URL}", "up", "2"]
+  cache:
+    image: redis:latest
+    restart: always
+    networks:
+      - backend
+    env_file: .env
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache:/data
+    command:
+      [
+        "redis-server",
+        "--save 20 1",
+        "--loglevel warning",
+        "--requirepass ${REDIS_PASSWORD}",
+      ]
+  api:
+    container_name: article-service-api
+    env_file: .env
+    build: .
+    ports:
+      - "3001:3001"
+    networks:
+      - backend
+    depends_on:
+      - db
+      - cache
+    links:
+      - db
+      - cache
+    volumes:
+      - ./:/app
+
 volumes:
   pgdata:
+  cache:
+
+networks:
+  backend:
+    driver: bridge
