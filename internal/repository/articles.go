@@ -37,7 +37,7 @@ func (r *articlesRepository) GetArticles(query string, author string, page int) 
 		statement += ` WHERE lower(title) like $1 OR lower(body) like $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2`
 		rows, err = r.db.Query(statement, lowerQuery, offset)
 	} else {
-		statement += ` LIMIT 20 OFFSET $1`
+		statement += ` ORDER BY created_at DESC LIMIT 20 OFFSET $1`
 		rows, err = r.db.Query(statement, offset)
 	}
 
