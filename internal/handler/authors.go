@@ -63,7 +63,7 @@ func (h *authorHandler) GetAuthors(c *gin.Context) {
 			return
 		}
 
-		err = rdb.Set(context.Background(), "authors", cachedData, time.Hour).Err()
+		err = rdb.Set(context.Background(), "authors", cachedData, time.Second*5).Err()
 
 		if err != nil {
 			log.Info().Msg("failed to SET to redis")

@@ -88,7 +88,7 @@ func (h *articlesHandler) GetArticles(c *gin.Context) {
 			return
 		}
 
-		err = rdb.Set(context.Background(), "articles", cahcedData, time.Hour).Err()
+		err = rdb.Set(context.Background(), "articles", cahcedData, time.Second*5).Err()
 
 		if err != nil {
 			log.Info().Msg("failed to SET to redis")
