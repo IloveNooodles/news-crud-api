@@ -28,13 +28,13 @@ func (r *articlesRepository) GetArticles(query string, author string, page int) 
 	offset := (page - 1) * LIMIT
 
 	if author != "" && query != "" {
-		statement += ` WHERE lower(name) = $1 AND (lower(title) like $2 OR lower(body) like $2) LIMIT 20 OFFSET $3`
+		statement += ` WHERE lower(name) = $1 AND (lower(title) like $2 OR lower(body) like $2) ORDER BY created_at DESC LIMIT 20 OFFSET $3`
 		rows, err = r.db.Query(statement, lowerAuthor, lowerQuery, offset)
 	} else if author != "" {
-		statement += ` WHERE lower(name) = $1 LIMIT 20 OFFSET $2`
+		statement += ` WHERE lower(name) = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2`
 		rows, err = r.db.Query(statement, lowerAuthor, offset)
 	} else if query != "" {
-		statement += ` WHERE lower(title) like $1 OR lower(body) like $1 LIMIT 20 OFFSET $2`
+		statement += ` WHERE lower(title) like $1 OR lower(body) like $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2`
 		rows, err = r.db.Query(statement, lowerQuery, offset)
 	} else {
 		statement += ` LIMIT 20 OFFSET $1`

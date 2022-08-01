@@ -27,17 +27,6 @@ services:
         "--loglevel warning",
         "--requirepass ${REDIS_PASSWORD}",
       ]
-  # migrate:
-  #   image: migrate/migrate
-  #   networks:
-  #     - backend
-  #   volumes:
-  #     - .:/migrations
-  #   links:
-  #     - db
-  #   env_file: .env
-  #   command:
-  #     ["-path", "./migrations", "-database", "${DATABASE_URL}", "up", "2"]
   # api:
   #   container_name: article-service-api
   #   env_file: .env

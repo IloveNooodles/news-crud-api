@@ -1,12 +1,18 @@
 package handler
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
+	"github.com/IloveNooodles/kumparan-techincal-test/pkg/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type IArticlesHandler interface {
@@ -57,63 +63,54 @@ func (h *articlesHandler) GetArticles(c *gin.Context) {
 		pageInt = num
 	}
 
-	// rdb := redis.NewRedisClient()
-	// cachedData, err := rdb.Get(context.Background(), "articles").Bytes()
-	// fmt.Print(cachedData, "GG GAMING", listOfArticles)
-	// if err != nil {
-	// 	listOfArticles, err = h.articleService.GetArticles(query, author, pageInt)
-	// 	fmt.Print(listOfArticles)
-	// 	if err != nil {
-	// 		c.JSON(http.StatusNotFound, gin.H{
-	// 			"success": false,
-	// 			"message": "error when fetching data",
-	// 		})
-	// 		return
-	// 	}
+	key := fmt.Sprintf("articles-q%v-a%v-p%v", query, author, page)
 
-	// 	cahcedData, err := json.Marshal(listOfArticles)
-
-	// 	if err != nil {
-	// 		log.Info().Msg("failed to convert to redis")
-
-	// 		c.JSON(http.StatusInternalServerError, gin.H{
-	// 			"success": false,
-	// 			"message": "error when fetching data",
-	// 		})
-	// 		return
-	// 	}
-
-	// 	err = rdb.Set(context.Background(), "articles", cahcedData, time.Minute*2).Err()
-
-	// 	if err != nil {
-	// 		log.Info().Msg("failed to SET to redis")
-	// 		c.JSON(http.StatusInternalServerError, gin.H{
-	// 			"success": false,
-	// 			"message": "error when fetching data",
-	// 		})
-	// 		return
-	// 	}
-
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"success": true,
-	// 		"data":    listOfArticles,
-	// 	})
-	// 	return
-	// }
-
-	// err = json.Unmarshal(cachedData, &listOfArticles)
-
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{
-	// 		"success": false,
-	// 		"message": "error when fetching data",
-	// 	})
-	// 	return
-	// }
-
-	listOfArticles, err = h.articleService.GetArticles(query, author, pageInt)
+	rdb := redis.NewRedisClient()
+	cachedData, err := rdb.Get(context.Background(), key).Bytes()
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		listOfArticles, err = h.articleService.GetArticles(query, author, pageInt)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		cahcedData, err := json.Marshal(listOfArticles)
+
+		if err != nil {
+			log.Info().Msg("failed to convert to redis")
+
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		err = rdb.Set(context.Background(), key, cahcedData, time.Second*30).Err()
+
+		if err != nil {
+			log.Info().Msg("failed to SET to redis")
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"data":    listOfArticles,
+		})
+		return
+	}
+
+	err = json.Unmarshal(cachedData, &listOfArticles)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": "error when fetching data",
 		})
