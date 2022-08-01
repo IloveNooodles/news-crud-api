@@ -1,12 +1,17 @@
 package handler
 
 import (
+	"context"
+	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
+	"github.com/IloveNooodles/kumparan-techincal-test/pkg/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type IAuthorHandler interface {
@@ -21,6 +26,8 @@ type authorHandler struct {
 func (h *authorHandler) GetAuthors(c *gin.Context) {
 	page, _ := c.GetQuery("page")
 	var pageInt int
+	var authors []schema.Author
+	var err error
 
 	if num, err := strconv.Atoi(page); err != nil {
 		pageInt = 1
@@ -28,13 +35,59 @@ func (h *authorHandler) GetAuthors(c *gin.Context) {
 		pageInt = num
 	}
 
-	authors, err := h.authorService.GetAuthors(pageInt)
+	rdb := redis.NewRedisClient()
+	cachedData, err := rdb.Get(context.Background(), "authors").Bytes()
+
 	if err != nil {
-		c.JSON(http.StatusBadGateway, gin.H{
+		authors, err = h.authorService.GetAuthors(pageInt)
+
+		if err != nil {
+			log.Info().Msg("failed to get from database")
+
+			c.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		cachedData, err := json.Marshal(authors)
+
+		if err != nil {
+			log.Info().Msg("failed to convert to redis")
+
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		err = rdb.Set(context.Background(), "authors", cachedData, time.Hour).Err()
+
+		if err != nil {
+			log.Info().Msg("failed to SET to redis")
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"data":    authors,
+		})
+		return
+	}
+
+	err = json.Unmarshal(cachedData, &authors)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": "error when fetching data",
 		})
-		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

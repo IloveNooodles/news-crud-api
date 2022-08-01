@@ -1,12 +1,17 @@
 package handler
 
 import (
+	"context"
+	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
 	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
+	"github.com/IloveNooodles/kumparan-techincal-test/pkg/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type IArticlesHandler interface {
@@ -48,16 +53,63 @@ func (h *articlesHandler) GetArticles(c *gin.Context) {
 	author, _ := c.GetQuery("author")
 	page, _ := c.GetQuery("page")
 	var pageInt int
-  
+	var err error
+	var listOfArticles []schema.ArticlesAuthor
+
 	if num, err := strconv.Atoi(page); err != nil {
 		pageInt = 1
 	} else {
 		pageInt = num
 	}
 
-	listOfArticles, err := h.articleService.GetArticles(query, author, pageInt)
+	rdb := redis.NewRedisClient()
+	cachedData, err := rdb.Get(context.Background(), "articles").Bytes()
+
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		listOfArticles, err = h.articleService.GetArticles(query, author, pageInt)
+
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		cahcedData, err := json.Marshal(listOfArticles)
+
+		if err != nil {
+			log.Info().Msg("failed to convert to redis")
+
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		err = rdb.Set(context.Background(), "articles", cahcedData, time.Hour).Err()
+
+		if err != nil {
+			log.Info().Msg("failed to SET to redis")
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"message": "error when fetching data",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"data":    listOfArticles,
+		})
+		return
+	}
+
+	err = json.Unmarshal(cachedData, &listOfArticles)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": "error when fetching data",
 		})
