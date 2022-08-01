@@ -10,17 +10,6 @@ services:
       - "5434:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
-  migrate:
-    image: migrate/migrate
-    networks:
-      - backend
-    volumes:
-      - .:/migrations
-    links:
-      - db
-    env_file: .env
-    command:
-      ["-path", "./migrations", "-database", "${DATABASE_URL}", "up", "2"]
   cache:
     image: redis:latest
     restart: always
@@ -38,6 +27,17 @@ services:
         "--loglevel warning",
         "--requirepass ${REDIS_PASSWORD}",
       ]
+  # migrate:
+  #   image: migrate/migrate
+  #   networks:
+  #     - backend
+  #   volumes:
+  #     - .:/migrations
+  #   links:
+  #     - db
+  #   env_file: .env
+  #   command:
+  #     ["-path", "./migrations", "-database", "${DATABASE_URL}", "up", "2"]
   # api:
   #   container_name: article-service-api
   #   env_file: .env
