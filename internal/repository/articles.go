@@ -21,7 +21,7 @@ func (r *articlesRepository) GetArticles(query string, author string, page int) 
 	var listArticle []schema.ArticlesAuthor
 	var rows *sql.Rows
 	var err error
-	statement := `SELECT * FROM articles NATURAL JOIN authors`
+	statement := `SELECT a.*, au."name" FROM articles a inner JOIN authors au on a.author_id = au.id`
 	lowerAuthor := strings.ToLower(author)
 	lowerQuery := fmt.Sprintf(`%%%v%%`, strings.ToLower(query))
 	LIMIT := 20

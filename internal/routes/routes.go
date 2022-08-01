@@ -25,10 +25,10 @@ func RoutesInit(server *gin.Engine, db *sql.DB) {
 	v1 := api.Group("/v1")
 
 	articlesRepository := repository.NewArticlesRepository(db)
-	authorsRepository := repository.NewAuthorsRepository(db)
 	articlesService := service.NewArticleService(articlesRepository)
-	authorsService := service.NewAuthorService(authorsRepository)
 	articlesHandler := handler.NewArticlesHandler(articlesService)
+	authorsRepository := repository.NewAuthorsRepository(db)
+	authorsService := service.NewAuthorService(authorsRepository)
 	authorsHandler := handler.NewAuthorHandler(authorsService)
 
 	articles := v1.Group("/articles")
