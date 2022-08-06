@@ -1,4 +1,5 @@
 .tool-versions
 .env
+.env.production
 *.exe
 pgdata
