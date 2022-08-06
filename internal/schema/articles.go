@@ -20,3 +20,13 @@ type ArticlesAuthor struct {
 	articleResponse
 	authorName
 }
+
+type ArticlesRequest struct {
+	ID    string `json:"id" binding:"required"`
+	Title string `json:"title" binding:"required"`
+	Body  string `json:"body" binding:"required"`
+}
+
+type ArticlesDeleteRequest struct {
+	ID string `json:"id" binding:"required"`
+}

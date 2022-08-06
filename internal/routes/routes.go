@@ -35,6 +35,8 @@ func RoutesInit(server *gin.Engine, db *sql.DB) {
 	{
 		articles.GET("/", articlesHandler.GetArticles)
 		articles.POST("/", articlesHandler.CreateNewArticle)
+		articles.DELETE("/", articlesHandler.DeleteArticle)
+		articles.PATCH("/", articlesHandler.UpdateArticle)
 	}
 
 	author := v1.Group("/authors")

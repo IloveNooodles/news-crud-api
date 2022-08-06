@@ -6,8 +6,10 @@ import (
 )
 
 type IArticleService interface {
-	CreateNewArticle(schema schema.Articles) error
 	GetArticles(query string, author string, page int) ([]schema.ArticlesAuthor, error)
+	CreateNewArticle(schema schema.Articles) error
+	UpdateArticle(schema schema.ArticlesRequest) error
+	DeleteArticle(id string) error
 }
 
 type articleService struct {
@@ -21,6 +23,16 @@ func (s *articleService) GetArticles(query string, author string, page int) ([]s
 
 func (s *articleService) CreateNewArticle(schema schema.Articles) error {
 	err := s.articlesRepository.CreateNewArticle(schema)
+	return err
+}
+
+func (s *articleService) UpdateArticle(schema schema.ArticlesRequest) error {
+	err := s.articlesRepository.UpdateArticle(schema)
+	return err
+}
+
+func (s *articleService) DeleteArticle(id string) error {
+	err := s.articlesRepository.DeleteArticle(id)
 	return err
 }
 

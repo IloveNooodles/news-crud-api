@@ -12,6 +12,8 @@ import (
 type IArticlesRepository interface {
 	GetArticles(query string, author string, page int) ([]schema.ArticlesAuthor, error)
 	CreateNewArticle(schema schema.Articles) error
+	UpdateArticle(schema schema.ArticlesRequest) error
+	DeleteArticle(id string) error
 }
 type articlesRepository struct {
 	db *sql.DB
@@ -80,6 +82,38 @@ func (r *articlesRepository) CreateNewArticle(schema schema.Articles) error {
 	_, err = stmt.Exec(schema.ID, schema.Author_ID, schema.Title, schema.Body)
 	if err != nil {
 		log.Error().Msg("Error on inserting data")
+		return err
+	}
+
+	return nil
+}
+
+func (r *articlesRepository) UpdateArticle(schema schema.ArticlesRequest) error {
+	stmt, err := r.db.Prepare("update articles set title = $1, body = $2, created_at = now() where id = $3")
+	if err != nil {
+		log.Error().Msg("Error on preparing sql statement")
+		return err
+	}
+
+	_, err = stmt.Exec(schema.Title, schema.Body, schema.ID)
+	if err != nil {
+		log.Error().Msg("Error on updating data")
+		return err
+	}
+
+	return nil
+}
+
+func (r *articlesRepository) DeleteArticle(id string) error {
+	stmt, err := r.db.Prepare("delete from articles where id = $1")
+	if err != nil {
+		log.Error().Msg("Error on preparing sql statement")
+		return err
+	}
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		log.Error().Msg("Error on deleting data")
 		return err
 	}
 

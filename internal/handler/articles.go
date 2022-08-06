@@ -16,8 +16,10 @@ import (
 )
 
 type IArticlesHandler interface {
-	CreateNewArticle(c *gin.Context)
 	GetArticles(c *gin.Context)
+	CreateNewArticle(c *gin.Context)
+	UpdateArticle(c *gin.Context)
+	DeleteArticle(c *gin.Context)
 }
 
 type articlesHandler struct {
@@ -120,6 +122,58 @@ func (h *articlesHandler) GetArticles(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    listOfArticles,
+	})
+}
+
+func (h *articlesHandler) UpdateArticle(c *gin.Context) {
+	var json schema.ArticlesRequest
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"success": false,
+			"message": "missing parameter",
+		})
+		return
+	}
+
+	err := h.articleService.UpdateArticle(json)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"message": "no such id exists",
+		})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{
+		"success": true,
+		"message": "successfully update article",
+	})
+}
+
+func (h *articlesHandler) DeleteArticle(c *gin.Context) {
+	var json schema.ArticlesDeleteRequest
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"success": false,
+			"message": "missing parameter",
+		})
+		return
+	}
+
+	err := h.articleService.DeleteArticle(json.ID)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"message": "no such id exists",
+		})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{
+		"success": true,
+		"message": "successfully deleted article",
 	})
 }
 
