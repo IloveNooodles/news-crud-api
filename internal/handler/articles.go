@@ -145,7 +145,7 @@ func (h *articlesHandler) UpdateArticle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusNoContent, gin.H{
+	c.JSON(http.StatusAccepted, gin.H{
 		"success": true,
 		"message": "successfully update article",
 	})
@@ -171,7 +171,7 @@ func (h *articlesHandler) DeleteArticle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusNoContent, gin.H{
+	c.JSON(http.StatusAccepted, gin.H{
 		"success": true,
 		"message": "successfully deleted article",
 	})

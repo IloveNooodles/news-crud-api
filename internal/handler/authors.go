@@ -170,7 +170,7 @@ func (h *authorHandler) UpdateAuthor(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusNoContent, gin.H{
+	c.JSON(http.StatusAccepted, gin.H{
 		"success": true,
 		"message": "author updated successfuly",
 	})
