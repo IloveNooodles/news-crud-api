@@ -8,6 +8,8 @@ import (
 type IAuthorService interface {
 	GetAuthors(page int) ([]schema.Author, error)
 	CreateNewAuthor(schema schema.Author) error
+	UpdateAuthor(schema schema.Author) error
+	DeleteAuthor(id string) error
 }
 
 type authorService struct {
@@ -21,6 +23,16 @@ func (s *authorService) GetAuthors(page int) ([]schema.Author, error) {
 
 func (s *authorService) CreateNewAuthor(schema schema.Author) error {
 	err := s.authorsRepository.CreateNewAuthor(schema)
+	return err
+}
+
+func (s *authorService) UpdateAuthor(schema schema.Author) error {
+	err := s.authorsRepository.UpdateAuthor(schema)
+	return err
+}
+
+func (s *authorService) DeleteAuthor(id string) error {
+	err := s.authorsRepository.DeleteAuthor(id)
 	return err
 }
 

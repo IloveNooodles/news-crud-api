@@ -41,5 +41,7 @@ func RoutesInit(server *gin.Engine, db *sql.DB) {
 	{
 		author.GET("/", authorsHandler.GetAuthors)
 		author.POST("/", authorsHandler.CreateNewAuthor)
+		author.DELETE("/", authorsHandler.DeleteAuthor)
+		author.PUT("/", authorsHandler.UpdateAuthor)
 	}
 }

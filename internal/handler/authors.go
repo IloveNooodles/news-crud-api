@@ -17,6 +17,8 @@ import (
 type IAuthorHandler interface {
 	GetAuthors(c *gin.Context)
 	CreateNewAuthor(c *gin.Context)
+	UpdateAuthor(c *gin.Context)
+	DeleteAuthor(c *gin.Context)
 }
 
 type authorHandler struct {
@@ -119,6 +121,58 @@ func (h *authorHandler) CreateNewAuthor(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"success": true,
 		"message": "successfuly created new user",
+	})
+}
+
+func (h *authorHandler) DeleteAuthor(c *gin.Context) {
+	var json schema.AuthorRequest
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"success": false,
+			"message": "missing parameter",
+		})
+		return
+	}
+
+	err := h.authorService.DeleteAuthor(json.ID)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"message": "author is not found or have post",
+		})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, gin.H{
+		"success": true,
+		"message": "successfully deleted author",
+	})
+
+}
+
+func (h *authorHandler) UpdateAuthor(c *gin.Context) {
+	var json schema.Author
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"success": false,
+			"message": "missing parameter",
+		})
+		return
+	}
+
+	err := h.authorService.UpdateAuthor(json)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"message": "no author is found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{
+		"success": true,
+		"message": "author updated successfuly",
 	})
 }
 
