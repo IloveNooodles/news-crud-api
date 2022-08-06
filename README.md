@@ -41,7 +41,8 @@ some of them containing extra query parameters and all of the documentation coul
 
 1. Install all dependencies listed above
 2. Create .env from .env.example and fill it up
-3. Run the docker container using `docker-compose up -d`
-4. to run the server
+3. Run the docker container using `docker-compose up -d` to run on the background or `docker-compose up --build` to run in the CLI
+4. run
+5. to run the server
    1. `air server` for hot reloading after update
    2. `go run main.go server`

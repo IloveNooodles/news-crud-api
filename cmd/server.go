@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/IloveNooodles/kumparan-techincal-test/config"
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/routes"
-	"github.com/IloveNooodles/kumparan-techincal-test/pkg/lib"
-	svr "github.com/IloveNooodles/kumparan-techincal-test/pkg/server"
+	"github.com/ilovenooodles/news-crud-api/config"
+	"github.com/ilovenooodles/news-crud-api/internal/routes"
+	"github.com/ilovenooodles/news-crud-api/pkg/lib"
+	svr "github.com/ilovenooodles/news-crud-api/pkg/server"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
+	"github.com/ilovenooodles/news-crud-api/internal/schema"
 	"github.com/rs/zerolog/log"
 )
 

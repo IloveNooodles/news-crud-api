@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/repository"
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
+	"github.com/ilovenooodles/news-crud-api/internal/repository"
+	"github.com/ilovenooodles/news-crud-api/internal/schema"
 )
 
 type IAuthorService interface {

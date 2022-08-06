@@ -1,19 +1,27 @@
 version: "3.8"
 services:
   db:
+    container_name: database
     image: postgres:13-alpine
+    hostname: postgres
     restart: always
-    env_file: .env
+    env_file: .env.production
     networks:
       - backend
     ports:
       - "5434:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 10s
+      timeout: 3s
+      retries: 5
   cache:
+    container_name: redis
     image: redis:latest
     restart: always
-    env_file: .env
+    env_file: .env.production
     ports:
       - "6379:6379"
     volumes:
@@ -27,22 +35,34 @@ services:
         "--loglevel warning",
         "--requirepass ${REDIS_PASSWORD}",
       ]
-  # api:
-  #   container_name: article-service-api
-  #   env_file: .env
-  #   build: .
-  #   ports:
-  #     - "3001:3001"
-  #   networks:
-  #     - backend
-  #   depends_on:
-  #     - db
-  #     - cache
-  #   links:
-  #     - db
-  #     - cache
-  #   volumes:
-  #     - ./:/app
+  api:
+    container_name: news-service-api
+    env_file: .env.production
+    build: .
+    ports:
+      - "3001:3001"
+    networks:
+      - backend
+    depends_on:
+      - db
+      - cache
+    links:
+      - db
+      - cache
+  migrate:
+    container_name: migrate
+    image: migrate/migrate
+    env_file: .env.production
+    restart: on-failure:3
+    networks:
+      - backend
+    volumes:
+      - ./migrations:/migrations
+    command: ["-path", "/migrations", "-database", "${DATABASE_URL}", "up"]
+    depends_on:
+      - db
+    links:
+      - db
 
 volumes:
   pgdata:
@@ -52,4 +72,3 @@ volumes:
 
 networks:
   backend:
-    driver: bridge

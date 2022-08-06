@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/handler"
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/repository"
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
 	"github.com/gin-gonic/gin"
+	"github.com/ilovenooodles/news-crud-api/internal/handler"
+	"github.com/ilovenooodles/news-crud-api/internal/repository"
+	"github.com/ilovenooodles/news-crud-api/internal/service"
 )
 
 func wildcardRouting(c *gin.Context) {

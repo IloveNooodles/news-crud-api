@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/schema"
-	"github.com/IloveNooodles/kumparan-techincal-test/internal/service"
-	"github.com/IloveNooodles/kumparan-techincal-test/pkg/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/ilovenooodles/news-crud-api/internal/schema"
+	"github.com/ilovenooodles/news-crud-api/internal/service"
+	"github.com/ilovenooodles/news-crud-api/pkg/redis"
 	"github.com/rs/zerolog/log"
 )
 

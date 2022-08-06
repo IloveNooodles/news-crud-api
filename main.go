@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/IloveNooodles/kumparan-techincal-test/cmd"
-	"github.com/IloveNooodles/kumparan-techincal-test/config"
+	"github.com/ilovenooodles/news-crud-api/cmd"
+	"github.com/ilovenooodles/news-crud-api/config"
 )
 
 func main() {
-  config.Init()
-  cmd.Init()
+	config.Init()
+	cmd.Init()
 }
