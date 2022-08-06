@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "c2448a76-f12b-4c34-a8c4-7c4cfd5f42dc",
+		"name": "News management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16414005"
+	},
+	"item": [
+		{
+			"name": "Articles",
+			"item": [
+				{
+					"name": "Create new articles",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1001\",\r\n    \"author_id\": \"1\",\r\n    \"title\": \"gaming test post 123\",\r\n    \"body\": \"ini judul ya bos\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/articles/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"articles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Articles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/articles/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"articles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Articles",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/articles/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"articles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Articles",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/articles/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"articles",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authors",
+			"item": [
+				{
+					"name": "Create new author",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"5\",\r\n    \"name\": \"test123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/authors/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/authors/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Author",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/authors/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Author",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"4\",\r\n    \"name\": \"gare\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL}}/api/v1/authors/",
+							"host": [
+								"{{LOCAL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
