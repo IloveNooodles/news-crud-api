@@ -2,6 +2,10 @@
 
 This repository is CRUD API for news management applying the clean code with three layer of handler, service, and repository. Created using GO, using redis for caching, pure sql library (no ORM) and docker for containerizing.
 
+## Relation
+![image](https://user-images.githubusercontent.com/63847012/183245053-c9f03f0e-d27a-4c52-8c13-8f7c0c5d38df.png)
+
+
 ## Features
 
 This service come into two endpoint
